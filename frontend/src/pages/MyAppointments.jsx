@@ -17,8 +17,7 @@ const MyAppointments = () => {
                 <p className='text-neutral-800 font-semibold'>{item.name}</p>
                 <p className=''>{item.speciality}</p>
                 <p className='text-zinc-700 font-medium mt-1'>Address: </p>
-                <p className='text-xs'>{item.address.line1}</p>
-                <p className='text-xs '>{item.address.line2}</p>
+                <p className='text-xs'>{item.address}</p>
                 <p className='text-xs mt-1'><span className='text-sm text-neutral-700 font-medium'>Date & Time:</span> 1 July 2025 | 5:47 PM</p>
               </div>
               <div></div>

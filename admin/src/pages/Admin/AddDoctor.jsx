@@ -15,8 +15,7 @@ const AddDoctor = () => {
     const [about,setAbout] = useState("");
     const [degree,setDegree] = useState("");
     const [speciality,setSpeciality] = useState("General physician");
-    const [address1,setAddress1] = useState("");
-    const [address2,setAddress2] = useState("");
+    const [address,setAddress] = useState("");
 
     const {backendUrl,aToken} = useContext(AdminContext);
 
@@ -37,7 +36,7 @@ const AddDoctor = () => {
             formData.append("about",about);
             formData.append("speciality",speciality);
             formData.append("degree",degree);
-            formData.append("address",JSON.stringify({line1:address1,line2:address2}));
+            formData.append("address",address);
 
             const {data} = await axios.post(backendUrl+'/api/admin/add-doctor',formData,{headers: {aToken}});
             if(data.success) {
@@ -45,8 +44,7 @@ const AddDoctor = () => {
                 setDocImg(false);
                 setName('');
                 setAbout('');
-                setAddress1('');
-                setAddress2('');
+                setAddress('');
                 setPassword('');
                 setDegree('');
                 setEmail('');
