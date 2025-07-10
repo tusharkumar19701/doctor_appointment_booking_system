@@ -1,22 +1,52 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { assets } from '../assets/assets_frontend/assets';
 import RelatedDoctors from '../components/RelatedDoctors';
 import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Appointment = () => {
   const {docId} = useParams();
-  const {doctors,currency} = useContext(AppContext);
+  const {doctors,currency,backendUrl,getDoctorsData,token} = useContext(AppContext);
   const [docInfo,setDocInfo] = useState(null);
   const [docSlots,setDocSlots] = useState([]);
   const [slotIndex,setSlotIndex] = useState(0);
   const [slotTime,setSlotTime] = useState('');
+
+  const navigate = useNavigate();
 
   const days = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
 
   const fetchDocInfo = async () => {
     const docIn = doctors.find(doc=>doc._id === docId);
     setDocInfo(docIn);
+  }
+
+  const bookAppointment = async() => {
+    try {
+      if(!token) {
+        toast.warn("Login to book appointment");
+        return navigate('/login');
+      }
+      console.log(docSlots);
+      const date = docSlots[slotIndex][0].datetime;
+      let day = date.getDate();
+      let month = date.getMonth()+1;
+      let year = date.getFullYear();
+
+      const slotDate = day + "_" + month + "_" + year;
+
+      const {data} = await axios.post(backendUrl+'/api/user/book-appointment',{docId,slotDate,slotTime},{headers:{token}});
+      if(data.success) {
+        toast.success(data.message);
+        getDoctorsData();
+        navigate("/my-appointments");
+      } else toast.error(data.message);
+    } catch(error) {
+      console.log("Error: ",error);
+      toast.error(error.message);
+    }
   }
 
   const getAvailableSlots = async() => {
@@ -102,7 +132,7 @@ const Appointment = () => {
         <div className='flex gap-3 w-full overflow-x-scroll items-center mt-4'>
           {
             docSlots.length && docSlots.map((item,index) => (
-              <div onClick={()=>setSlotIndex(index)} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? "bg-[#5f6FFF] text-white": "border border-gray-200"}`} key={index}>
+              item.length > 0 && <div onClick={()=>setSlotIndex(index)} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? "bg-[#5f6FFF] text-white": "border border-gray-200"}`} key={index}>
                 <p>{item[0] && days[item[0].datetime.getDay()]}</p>
                 <p>{item[0] && item[0].datetime.getDate()}</p>
               </div>
@@ -115,7 +145,9 @@ const Appointment = () => {
             <p onClick={()=>setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? "bg-[#5f6FFF] text-white":"border border-gray-300 text-gray-400"}`} key={index}>{item.time.toLowerCase()}</p>
           ))}
         </div>
-        <button className="bg-[#5f6FFF] text-white font-light text-sm rounded-full my-6 px-14 py-3 cursor-pointer">Book an appointment</button>
+        <button 
+        onClick={bookAppointment}
+         className="bg-[#5f6FFF] text-white font-light text-sm rounded-full my-6 px-14 py-3 cursor-pointer">Book an appointment</button>
       </div>
       
         {/* Related Doctors  */}

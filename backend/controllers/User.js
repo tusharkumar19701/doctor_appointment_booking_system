@@ -1,8 +1,10 @@
 import validator from 'validator';
 import bcrypt from "bcrypt";
 import userModel from '../models/User.js';
+import doctorModel from "../models/Doctor.js";
 import jwt from "jsonwebtoken";
 import {v2 as cloudinary} from "cloudinary";
+import appointmentModel from '../models/Appointment.js';
 
 
 const registerUser = async(req,res) => {
@@ -109,4 +111,52 @@ const updateProfile = async(req,res) => {
     }
 }
 
-export {registerUser,loginUser,getProfile,updateProfile};
+const bookAppointment = async(req,res) => {
+    try {
+        const {docId,slotTime,slotDate} = req.body;
+        const userId = req.userId;
+        // console.log(id)
+        const docData = await doctorModel.findById(docId).select("-password");
+
+        if(!docData.available) {
+            return res.json({success:false,message:"Doctor not available"});
+        }
+
+        let slots_booked = docData.slots_booked;
+
+        if(slots_booked[slotDate]) {
+            if(slots_booked[slotDate].includes(slotTime)) {
+                return res.json({success:false,message:"Slot not available"});
+            } else {
+                slots_booked[slotDate].push(slotTime);
+            }
+        } else {
+            slots_booked[slotDate] = [];
+            slots_booked[slotDate].push(slotTime);
+        }
+
+        const userData = await userModel.findById(userId).select("-password");
+        delete docData.slots_booked;
+
+        const appointmentData = {
+            userId,
+            docId,
+            userData,
+            docData,
+            amount:docData.fees,
+            slotTime,
+            slotDate,
+            date: Date.now(),
+        }
+
+        const newAppointment = new appointmentModel(appointmentData);
+        await newAppointment.save();
+
+        await doctorModel.findByIdAndUpdate(docId,{slots_booked});
+        return res.status(200).json({success:true,message:"Appointment booked successfully"});
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+export {registerUser,loginUser,getProfile,updateProfile,bookAppointment};
