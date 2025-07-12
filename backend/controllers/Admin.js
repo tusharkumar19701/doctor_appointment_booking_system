@@ -37,7 +37,7 @@ const addDoctor = async(req,res) => {
             fees,
             about,
             experience,
-            address: JSON.parse(address),
+            address: address,
             date: Date.now(),
         }
 
