@@ -121,8 +121,7 @@ const AddDoctor = () => {
                     </div>
                     <div className='flex-1 flex flex-col gap-1'>
                         <p>Address</p>
-                        <input onChange={(e)=>setAddress1(e.target.value)} value={address1} className='rounded px-3 py-2 border border-slate-300' type="text" placeholder='address 1' required />
-                        <input onChange={(e)=>setAddress2(e.target.value)} value={address2} className='rounded px-3 py-2 border border-slate-300' type="text" placeholder='address 2' required />
+                        <input onChange={(e)=>setAddress(e.target.value)} value={address} className='rounded px-3 py-2 border border-slate-300' type="text" placeholder='Address' required />
                     </div>
                 </div>
             </div>
