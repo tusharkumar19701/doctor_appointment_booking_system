@@ -108,9 +108,10 @@ const MyAppointments = () => {
               </div>
               <div></div>
               <div className='flex flex-col gap-2 justify-end'>
-                {item.payment && !item.cancelled && <button className='sm:min-w-48 py-2 rounded text-white bg-green-700'>Paid</button>}
-                {!item.cancelled && !item.payment && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-[#5f6FFF] transition-all duration-300 hover:text-white cursor-pointer'>Pay Online</button>}
-                {!item.cancelled && <button onClick={()=>cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 transition-all duration-300 hover:text-white cursor-pointer'>Cancel appointment</button>}
+                {item.isCompleted && <button className='sm:min-w-48 py-2 rounded text-slate-700 bg-blue-300'>Completed</button>}
+                {item.payment && !item.cancelled && !item.isCompleted && <button className='sm:min-w-48 py-2 rounded text-white bg-green-700'>Paid</button>}
+                {!item.cancelled && !item.payment &&!item.isCompleted && <button onClick={()=>appointmentRazorpay(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-[#5f6FFF] transition-all duration-300 hover:text-white cursor-pointer'>Pay Online</button>}
+                {!item.cancelled && !item.isCompleted && <button onClick={()=>cancelAppointment(item._id)} className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 transition-all duration-300 hover:text-white cursor-pointer'>Cancel appointment</button>}
                 {item.cancelled && <button className='text-sm text-red-500 sm:min-w-48 py-2 border rounded border-red-400'>Appointment Cancelled</button>}
               </div>
             </div>

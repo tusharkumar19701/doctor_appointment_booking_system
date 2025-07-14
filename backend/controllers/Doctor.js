@@ -1,6 +1,7 @@
 import doctorModel from "../models/Doctor.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import appointmentModel from "../models/Appointment.js";
 
 const changeAvailability = async(req,res) => {
     try {
@@ -46,4 +47,44 @@ const loginDoctor = async(req,res) => {
     }
 }
 
-export {changeAvailability,doctorList,loginDoctor};
+const doctorAppointments = async(req,res) => {
+    try {
+        const docId = req.docId;
+        const appointments = await appointmentModel.find({docId});
+        return res.status(200).json({success:true,message:"Appointments fetched.",appointments});
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+const appointmentComplete = async(req,res) => {
+    try {
+        const docId = req.docId;
+        const {appointmentId} = req.body;
+        const appointmentData = await appointmentModel.findById(appointmentId);
+
+        if(appointmentData && appointmentData.docId === docId) {
+            await appointmentModel.findByIdAndUpdate(appointmentId,{isCompleted:true});
+            return res.status(200).json({success:true,message:"Appointment completed"});
+        } else return res.status(400).json({success:false,message:"Appointment Completion Failed"});
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+const appointmentCancel = async(req,res) => {
+    try {
+        const docId = req.docId;
+        const {appointmentId} = req.body;
+        const appointmentData = await appointmentModel.findById(appointmentId);
+
+        if(appointmentData && appointmentData.docId === docId) {
+            await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true});
+            return res.status(200).json({success:true,message:"Appointment cancelled"});
+        } else return res.status(400).json({success:false,message:"Cancellation Failed"});
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+export {changeAvailability,doctorList,loginDoctor,doctorAppointments,appointmentComplete,appointmentCancel};
