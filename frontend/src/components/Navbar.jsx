@@ -9,6 +9,7 @@ const Navbar = () => {
     const {token,setToken} = useContext(AppContext);
     const [showMenu,setShowMenu] = useState(false);
     const {userData} = useContext(AppContext);
+    const ADMIN_URL = import.meta.env.VITE_ADMIN_URL;
 
 
     const logout = () => {
@@ -52,9 +53,13 @@ const Navbar = () => {
                         </div>
                     </div>
                 ) : (
-                    <button onClick={() => navigate("/login")} className='bg-[#5f6FFF] cursor-pointer text-white px-8 py-3 rounded-full font-light hidden md:block'>
-                    Create Account
-                    </button>
+                    <div className='flex gap-2'>
+
+                        <button onClick={() => navigate("/login")} className='bg-[#5f6FFF] cursor-pointer text-white px-8 py-3 rounded-full font-light hidden md:block'>
+                        Create Account
+                        </button>
+                        <a className='bg-white border border-[#5f6FFF] cursor-pointer text-[#5f6FFF] px-4 py-3 rounded-full font-light hidden md:block' href={ADMIN_URL}>Admin/Doctor Login</a>
+                    </div>
                 )
             }
             <img onClick={()=>setShowMenu(true)} src={assets.menu_icon} className="w-6 md:hidden" alt="" />
@@ -69,6 +74,8 @@ const Navbar = () => {
                     <NavLink onClick={()=>setShowMenu(false)} to="/doctors"><p className='px-4 py-2 rounded inline-block'>ALL DOCTORS</p></NavLink>
                     <NavLink onClick={()=>setShowMenu(false)} to="/about"><p className='px-4 py-2 rounded inline-block'>ABOUT</p></NavLink>
                     <NavLink onClick={()=>setShowMenu(false)} to="/contact"><p className='px-4 py-2 rounded inline-block'>CONTACT</p></NavLink>
+                    {!token && <NavLink onClick={()=>setShowMenu(false)} to="/login"><p className='px-4 py-2 rounded inline-block'>Create Account</p></NavLink>}
+                    {!token && <a href="http://localhost:5174"><p className='px-4 py-2 rounded inline-block'>Admin/Doctor Login</p></a>}
                 </ul>
             </div>
         </div>
