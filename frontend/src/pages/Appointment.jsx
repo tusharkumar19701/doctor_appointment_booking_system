@@ -29,6 +29,10 @@ const Appointment = () => {
         toast.warn("Login to book appointment");
         return navigate('/login');
       }
+      if(!docInfo.available) {
+        toast.warn("Doctor not available");
+        return;
+      }
       console.log(docSlots);
       const date = docSlots[slotIndex][0].datetime;
       let day = date.getDate();
@@ -156,9 +160,9 @@ const Appointment = () => {
             <p onClick={()=>setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? "bg-[#5f6FFF] text-white":"border border-gray-300 text-gray-400"}`} key={index}>{item.time.toLowerCase()}</p>
           ))}
         </div>
-        <button 
+        {<button 
         onClick={bookAppointment}
-         className="bg-[#5f6FFF] text-white font-light text-sm rounded-full my-6 px-14 py-3 cursor-pointer">Book an appointment</button>
+         className="bg-[#5f6FFF] text-white font-light text-sm rounded-full my-6 px-14 py-3 cursor-pointer">Book an appointment</button>}
       </div>
       
         {/* Related Doctors  */}

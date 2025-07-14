@@ -20,7 +20,7 @@ const Sidebar = () => {
                     <img src={assets.appointment_icon} alt="" />
                     <p className='md:block hidden'>Appointments</p>
                 </NavLink>
-                <NavLink className={({isActive}) => `flex items-center py-3.5 gap-3 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? "bg-[#F2F3FF] border-r-4 border-[#5f6FFF]":""}`} to={'/doctor-profile'}>
+                <NavLink className={({isActive}) => `flex items-center py-3.5 w-16 gap-3 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? "bg-[#F2F3FF] border-r-4 border-[#5f6FFF]":""}`} to={'/doctor-profile'}>
                     <img src={assets.people_icon} alt="" />
                     <p className='md:block hidden'>Profile</p>
                 </NavLink>
@@ -28,7 +28,7 @@ const Sidebar = () => {
         }
         {
             aToken && <ul className='text-[#515151] mt-5'>
-                <NavLink className={({isActive}) => `flex items-center py-3.5 gap-3 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? "bg-[#F2F3FF] border-r-4 border-[#5f6FFF]":""}`} to={'/admin-dashboard'}>
+                <NavLink className={({isActive}) => `flex items-center py-3.5 w-16 gap-3 px-3 md:px-9 md:min-w-72 cursor-pointer ${isActive ? "bg-[#F2F3FF] border-r-4 border-[#5f6FFF]":""}`} to={'/admin-dashboard'}>
                     <img src={assets.home_icon} alt="" />
                     <p className='md:block hidden'>Dashboard</p>
                 </NavLink>

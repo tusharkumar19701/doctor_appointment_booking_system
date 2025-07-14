@@ -87,4 +87,61 @@ const appointmentCancel = async(req,res) => {
     }
 }
 
-export {changeAvailability,doctorList,loginDoctor,doctorAppointments,appointmentComplete,appointmentCancel};
+const doctorDashboard = async(req,res) => {
+    try {
+        const docId = req.docId;
+        const appointments = await appointmentModel.find({docId});
+        
+        let earnings = 0;
+        appointments.map((item) => {
+            if(item.isCompleted || item.payment) {
+                earnings += item.amount;
+            }
+        })
+
+        let patients = [];
+        appointments.map((item) => {
+            if(!patients.includes(item._id)) {
+                patients.push(item.userId);
+            }
+        })
+
+        const dashData = {
+            earnings,
+            patients: patients.length,
+            appointments: appointments.length,
+            latestAppointments: appointments.reverse().slice(0,5),
+        }
+
+        return res.status(200).json({success:true,dashData});
+
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+
+const doctorProfile = async(req,res) => {
+    try {
+        const docId = req.docId;
+        const profile = await doctorModel.findById(docId).select('-password');
+        return res.status(200).json({success:true,profile});
+
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+const updateDoctorProfile = async(req,res) => {
+    try {
+        const docId = req.docId;
+        const {fees,address,available} = req.body;
+
+        await doctorModel.findByIdAndUpdate(docId,{fees,available,address});
+        return res.status(200).json({success:true,message:"Profile updated"});
+    } catch(error) {
+        return res.status(500).json({success:false,message:error.message});
+    }
+}
+
+export {changeAvailability,doctorList,loginDoctor,doctorAppointments,appointmentComplete,appointmentCancel,doctorDashboard,doctorProfile,updateDoctorProfile};
