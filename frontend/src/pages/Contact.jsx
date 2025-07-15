@@ -14,7 +14,7 @@ const Contact = () => {
           <p className='font-semibold text-lg text-gray-600'>Our Office</p>
           <p className='text-gray-500'>Hostel 16 Near Gate No. 12 <br /> B.I.T. Sindri, Dhanbad</p>
           <p className='text-gray-500'>0651-1083-232 <br />Email: tusharkumar19701@gmail.com</p>
-          <p className='font-semibold text-lg text-gray-600'>Careers at Prescripto</p>
+          <p className='font-semibold text-lg text-gray-600'>Careers at BookMyDoc</p>
           <p className='text-gray-500'>Learn more about our team and job openings.</p>
           <button className='border border-black px-8 py-4 text-sm hover:bg-black hover:text-white transition-all duration-500 cursor-pointer'>Explore More</button>
         </div>
